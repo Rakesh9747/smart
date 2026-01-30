@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Institution Verification</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: #fff;
+    width: 420px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+input, button {
+    width: 95%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+button {
+    background: #667eea;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+.result {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.genuine { background:#e6fffa; color:#065f46; }
+.fake { background:#ffe4e6; color:#9f1239; }
+.notfound { background:#fef3c7; color:#92400e; }
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h2>Search Institution</h2>
+
+<input type="text" id="searchBox" placeholder="Enter Institution Name">
+<div id="suggestions"></div>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="name" id="finalName">
+    <button type="submit">Search</button>
+</form>
+
+{% if genuine %}
+<div class="result genuine">
+    <h3>{{ inst.name }} ✅ Genuine</h3>
+    <p>⭐ Rating: {{ inst.rating }}</p>
+    <p>🏛 Accreditation:
+        {% if inst.accreditation %}
+            Approved
+        {% else %}
+            Not Approved
+        {% endif %}
+    </p>
+    <p>📊 Placement Score: {{ inst.placement_score }}%</p>
+    <p>🗣 Reviews: {{ inst.reviews_count }}</p>
+
+    
+
+    {% if inst.website %}
+        <p><a href="{{ inst.website }}" target="_blank">Official Website</a></p>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if fake %}
+<div class="result fake">
+    <h3>⚠ Fake Institution Detected</h3>
+</div>
+{% endif %}
+
+{% if not_found %}
+<div class="result notfound">
+    <h3>❌ Institution Not Found</h3>
+</div>
+{% endif %}
+
+</div>
+
+<script>
+const searchBox = document.getElementById("searchBox");
+const suggestionsDiv = document.getElementById("suggestions");
+const finalName = document.getElementById("finalName");
+
+searchBox.addEventListener("keyup", function () {
+    let query = this.value;
+    if (query.length < 1) {
+        suggestionsDiv.innerHTML = "";
+        return;
+    }
+
+    fetch(`/autosuggest/?q=${query}`)
+    .then(res => res.json())
+    .then(data => {
+        suggestionsDiv.innerHTML = "";
+        data.forEach(item => {
+            let div = document.createElement("div");
+            div.innerHTML = `<b>${item.name}</b> ⭐${item.rating}`;
+            div.onclick = () => {
+                searchBox.value = item.name;
+                finalName.value = item.name;
+                suggestionsDiv.innerHTML = "";
+            };
+            suggestionsDiv.appendChild(div);
+        });
+    });
+});
+</script>
+
+</body>
+</html>
