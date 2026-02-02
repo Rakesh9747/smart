@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Application Submitted</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f0fdf4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #22c55e;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Application Submitted Successfully ✅</h2>
+    <p>Your application has been saved.</p>
+
+    <!-- ✅ Go back to search page -->
+    <a href="{% url 'search' %}">Go Back</a>
+</div>
+
+</body>
+</html>

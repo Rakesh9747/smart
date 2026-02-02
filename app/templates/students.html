@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Applications</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f8fafc;
+            padding: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background: #2563eb;
+            color: white;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+
+<h2>📋 Student Application Details</h2>
+
+<table>
+    <tr>
+        <th>Student Name</th>
+        <th>Email</th>
+        <th>Course</th>
+        <th>Institution</th>
+    </tr>
+
+    {% for s in students %}
+    <tr>
+        <td>{{ s.student_name }}</td>
+        <td>{{ s.email }}</td>
+        <td>{{ s.course }}</td>
+        <td>{{ s.institution.name }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">No applications found</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<a href="{% url 'search' %}">⬅ Back to Search</a>
+
+</body>
+</html>

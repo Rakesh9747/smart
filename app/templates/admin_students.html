@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin – Student Applications</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f1f5f9;
+            padding: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .download {
+            background: #16a34a;
+        }
+
+        .logout {
+            background: #dc2626;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        tr:hover {
+            background: #e0e7ff;
+        }
+
+        .empty {
+            padding: 20px;
+            color: #9f1239;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h2>📋 Student Applications (Admin)</h2>
+
+<div class="top-bar">
+    <a href="{% url 'download_report' %}" class="btn download">⬇ Download Report</a>
+    <a href="{% url 'admin_logout' %}" class="btn logout">Logout</a>
+</div>
+
+<table>
+<tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Course</th>
+    <th>Institution</th>
+</tr>
+
+{% for s in students %}
+<tr>
+    <td>{{ s.student_name }}</td>
+    <td>{{ s.email }}</td>
+    <td>{{ s.course }}</td>
+    <td>{{ s.institution.name }}</td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="4" class="empty">No records found</td>
+</tr>
+{% endfor %}
+</table>
+
+</body>
+</html>
