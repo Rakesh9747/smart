@@ -89,32 +89,34 @@ def view_students(request):
     return render(request, "students.html", {"students": students})
 
 
+from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from .models import AdminUser, StudentApplication
+from .models import AdminUser
 
 def admin_login(request):
     error = ""
 
     if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "").strip()
 
-        admin = AdminUser.objects.filter(
-            username=username,
-            password=password
-        ).first()
+        print("Entered:", username, password)
 
-        if admin:
+        admin = AdminUser.objects.filter(username=username).first()
+
+        if admin and admin.password == password:
             request.session["admin"] = admin.username
             return redirect("admin_students")
         else:
             error = "Invalid username or password"
 
     return render(request, "admin_login.html", {"error": error})
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def admin_students(request):
-    if "admin" not in request.session:
-        return redirect("admin_login")
+    students = StudentApplication.objects.all()
+    return render(request, "admin_students.html", {"students": students})
 
     students = StudentApplication.objects.all()
     return render(request, "admin_students.html", {"students": students})
