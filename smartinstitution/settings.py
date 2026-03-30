@@ -25,10 +25,11 @@ SECRET_KEY = 'django-insecure-5%cslc&ns$6b1=-7nshyo@!k1whiv)x=x0im++85igcu75&dd)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', '.pythonanywhere.com']
+ALLOWED_HOSTS = ['*', '.pythonanywhere.com', '.hf.space']
 CSRF_TRUSTED_ORIGINS = [
     "https://*.ngrok-free.dev",
     "https://*.pythonanywhere.com",
+    "https://*.hf.space",
 ]
 
 
