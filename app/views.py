@@ -89,9 +89,8 @@ def view_students(request):
     return render(request, "students.html", {"students": students})
 
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from .models import AdminUser
 
 def admin_login(request):
     error = ""
@@ -100,12 +99,12 @@ def admin_login(request):
         username = request.POST.get("username", "").strip()
         password = request.POST.get("password", "").strip()
 
-        print("Entered:", username, password)
+        print(f"Login attempt: {username}")
 
-        admin = AdminUser.objects.filter(username=username).first()
+        user = authenticate(request, username=username, password=password)
 
-        if admin and admin.password == password:
-            request.session["admin"] = admin.username
+        if user is not None:
+            login(request, user)
             return redirect("admin_students")
         else:
             error = "Invalid username or password"
@@ -121,8 +120,7 @@ def admin_students(request):
     students = StudentApplication.objects.all()
     return render(request, "admin_students.html", {"students": students})
 def admin_logout(request):
-    if "admin" in request.session:
-        del request.session["admin"]
+    logout(request)
     return redirect("admin_login")
 
 
@@ -131,8 +129,8 @@ from django.http import HttpResponse
 from .models import StudentApplication
 
 def download_students_report(request):
-    # 🔐 Protect page (admin only)
-    if "admin" not in request.session:
+    # 🔐 Protect page (admin/superuser only)
+    if not request.user.is_authenticated:
         return redirect("admin_login")
 
     response = HttpResponse(content_type="text/csv")
